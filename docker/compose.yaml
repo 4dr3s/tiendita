@@ -1,0 +1,50 @@
+# Local development infrastructure for TIENDITA v2.
+#
+# Constraint: this host's WSL distro has no working `docker` client — use
+# `docker.exe` for every command, e.g.:
+#   docker.exe compose -f docker/compose.yaml up -d
+#
+# Ports and names deliberately avoid the previous attempt's leftovers
+# (container `tiendita-postgres`, orphan volume `tiendita_postgres_data`)
+# and the WSL redis-server already bound to host port 6379.
+name: tiendita-v2
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: tiendita-v2-postgres
+    environment:
+      POSTGRES_USER: tiendita
+      POSTGRES_PASSWORD: tiendita
+      POSTGRES_DB: tiendita_v2
+    ports:
+      - "55432:5432"
+    # postgres:18+ images store data under major-version-specific subdirectories
+    # and require the single mount point at /var/lib/postgresql (see
+    # docker-library/postgres PR 1259); the legacy /data subdir mount is refused.
+    volumes:
+      - tiendita_v2_pg_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tiendita -d tiendita_v2"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: tiendita-v2-redis
+    ports:
+      - "56379:6379"
+    volumes:
+      - tiendita_v2_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  tiendita_v2_pg_data:
+  tiendita_v2_redis_data:
