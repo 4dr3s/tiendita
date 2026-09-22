@@ -7,6 +7,11 @@
 #   2. Node is declared in .nvmrc and in engines.node (>=24), and the Docker images pin
 #      node:24-alpine. setup-node reads .nvmrc so the version lives in one place.
 #
+# Actions are pinned to immutable commit SHAs, with the human-readable version in a
+# trailing comment. A tag is a mutable pointer: whoever controls the upstream repository
+# can move it to different code, which would then run here with this repository's token.
+# Dependabot's `github-actions` ecosystem understands this form and bumps the SHA.
+#
 # Docker note: the local workflow in this repository needs `docker.exe` because the WSL
 # distro has no /var/run/docker.sock. On the runner, plain `docker` works. Never put
 # `docker.exe` in anything this pipeline executes.
@@ -37,16 +42,16 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Check out
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       # Must run before setup-node: the pnpm cache backend needs pnpm present.
       # No `version` input on purpose — the action reads packageManager from
       # package.json, so the pnpm version stays declared in exactly one place.
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
 
       - name: Set up Node
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version-file: .nvmrc
           cache: pnpm
@@ -81,15 +86,15 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v6
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
 
       - name: Set up Node
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version-file: .nvmrc
           cache: pnpm
