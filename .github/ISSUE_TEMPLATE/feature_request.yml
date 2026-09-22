@@ -1,0 +1,47 @@
+name: Feature request
+description: Propose a change in behaviour before it is built.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the problem first. A proposal is easier to evaluate than a conclusion
+        presented as a solution.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What can you not do today, and what does it cost you?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: What should happen instead, and where does it belong in the system?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Including "do nothing", and why it is not enough.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - apps/api
+        - apps/web
+        - packages/*
+        - docker / infrastructure
+        - repository tooling / CI
+        - not sure
+    validations:
+      required: true

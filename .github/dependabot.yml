@@ -1,0 +1,29 @@
+# Package manager
+
+version: 2
+updates:
+  # One pnpm workspace and one lockfile, both at the repository root.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "13:00"
+      timezone: America/Guayaquil
+    open-pull-requests-limit: 5
+    groups:
+      # Grouping keeps the review load proportionate: one pull request per dependency
+      # class per week, instead of a wall of single-package bumps.
+      dev-dependencies:
+        dependency-type: development
+      production-dependencies:
+        dependency-type: production
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      actions:
+        patterns: ["*"]

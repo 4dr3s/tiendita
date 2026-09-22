@@ -1,0 +1,56 @@
+name: Bug report
+description: Something behaves differently from what the code claims.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Reproducible steps are what turn a report into a fix.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Include the exact output or error, not a summary of it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Start the stack with ...
+        2. Call ...
+        3. Observe ...
+    validations:
+      required: true
+
+  - type: input
+    id: revision
+    attributes:
+      label: Commit or version
+      description: The commit SHA or tag you were running.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - apps/api
+        - apps/web
+        - packages/*
+        - docker / infrastructure
+        - repository tooling / CI
+        - not sure
+    validations:
+      required: true
