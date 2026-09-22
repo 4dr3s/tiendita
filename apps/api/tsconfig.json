@@ -2,7 +2,9 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "@tiendita/typescript-config/nestjs.json",
   "compilerOptions": {
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "rootDir": "./",
+    "types": ["node", "jest"]
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "jest.config.ts"]
+  "include": ["src/**/*.ts", "test/**/*.ts", "jest.config.mjs"]
 }
