@@ -1,0 +1,27 @@
+# Normalize all text files to LF inside the repository. The worktree may stay
+# CRLF on Windows, but diffs and the blob store must not see line-ending churn.
+* text=auto eol=lf
+
+# Binary files that git must never treat as text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.avif binary
+*.bmp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary
+*.wasm binary
+*.zip binary
+*.tar binary
+*.tgz binary
+*.gz binary
+*.lockb binary
+*.sqlite binary
+*.db binary

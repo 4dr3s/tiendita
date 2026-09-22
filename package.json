@@ -1,0 +1,23 @@
+{
+  "name": "tiendita",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TIENDITA v2 — multi-tenant SaaS monorepo for small stores",
+  "license": "MIT",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "format": "turbo run format"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.0",
+    "typescript": "^5.9.0"
+  }
+}
