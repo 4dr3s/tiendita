@@ -1,6 +1,7 @@
 {
   "name": "@tiendita/api",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "build": "nest build",
@@ -9,24 +10,24 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "test:cov": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test:e2e": "NODE_OPTIONS=--experimental-vm-modules jest --config ./test/jest-e2e.json",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
   },
   "dependencies": {
-    "@nestjs/common": "^11.0.0",
-    "@nestjs/config": "^4.0.0",
-    "@nestjs/core": "^11.0.0",
-    "@nestjs/platform-express": "^11.0.0",
+    "@nestjs/common": "^12.0.0",
+    "@nestjs/config": "^12.0.0",
+    "@nestjs/core": "^12.0.0",
+    "@nestjs/platform-express": "^12.0.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.0",
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@nestjs/cli": "^11.0.0",
-    "@nestjs/testing": "^11.0.0",
+    "@nestjs/cli": "^12.0.0",
+    "@nestjs/testing": "^12.0.0",
     "@tiendita/eslint-config": "workspace:*",
     "@tiendita/typescript-config": "workspace:*",
     "@types/express": "^5.0.0",
@@ -38,6 +39,6 @@
     "prettier": "^3.0.0",
     "supertest": "^7.0.0",
     "ts-jest": "^29.0.0",
-    "typescript": "^5.9.0"
+    "typescript": "^6.0.0"
   }
 }

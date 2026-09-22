@@ -1,4 +1,4 @@
-import { HealthController, type HealthPayload } from "./health.controller";
+import { HealthController, type HealthPayload } from "./health.controller.js";
 
 describe("HealthController", () => {
   it("reports ok status with uptime and timestamp", () => {
