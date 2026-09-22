@@ -1,0 +1,106 @@
+# Continuous integration for the TIENDITA v2 monorepo.
+#
+# Two facts about this repository shape this pipeline:
+#   1. It is a pnpm + turborepo workspace whose lockfile is the contract. Every job
+#      installs with --frozen-lockfile, so a stale lockfile fails here instead of on
+#      someone's machine.
+#   2. Node is declared in .nvmrc and in engines.node (>=24), and the Docker images pin
+#      node:24-alpine. setup-node reads .nvmrc so the version lives in one place.
+#
+# Docker note: the local workflow in this repository needs `docker.exe` because the WSL
+# distro has no /var/run/docker.sock. On the runner, plain `docker` works. Never put
+# `docker.exe` in anything this pipeline executes.
+
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A new push to the same branch makes the previous run obsolete.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CI: "true"
+  TURBO_TELEMETRY_DISABLED: "1"
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      # Must run before setup-node: the pnpm cache backend needs pnpm present.
+      # No `version` input on purpose — the action reads packageManager from
+      # package.json, so the pnpm version stays declared in exactly one place.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      # `config` parses and resolves the file client-side, so it needs no daemon.
+      # This is the only automated check the compose file gets.
+      - name: Validate compose file
+        run: docker compose -f docker/compose.yaml config -q
+
+  commit-message:
+    # Merging is squash-only, so the pull request title becomes the commit subject on
+    # main. That is the text worth linting. Branch commits are linted locally by the
+    # husky hook; linting them here as well would only re-check text that is discarded.
+    name: commit-message
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # On a public repository the title is attacker-controlled, so it reaches the
+      # linter through an environment variable. Interpolating it into `run:` would let
+      # a crafted title execute shell commands on the runner.
+      - name: Lint pull request title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s' "$PR_TITLE" | pnpm exec commitlint

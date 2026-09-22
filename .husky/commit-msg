@@ -1,0 +1,4 @@
+# Local convenience, not enforcement: `git commit --no-verify` bypasses this.
+# What actually enforces the convention is the `commit-message` job in
+# .github/workflows/ci.yml, which lints the pull request title.
+pnpm exec commitlint --edit "$1"
