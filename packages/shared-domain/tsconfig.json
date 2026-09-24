@@ -6,7 +6,8 @@
     "moduleResolution": "nodenext",
     "declaration": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "types": ["node", "jest"]
   },
   "include": ["src/**/*.ts"]
 }
